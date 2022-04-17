@@ -1,4 +1,5 @@
 const fs = require("fs/promises")
+const fsSync = require("fs")
 const path = require("path")
 class Document {
    #cols
@@ -91,7 +92,7 @@ module.exports.Database = class Database {
    }
    async save() {
        for (let doc of this.#docs.map(a=>a.toJSON())) {
-           if (await fs.exists(`./data/${doc.name}.json`)) await fs.copyFile(`./data/${doc.name}.json`, `./data/backup/${doc.name}.json`)
+           if (fsSync.existsSync(`./data/${doc.name}.json`)) await fs.copyFile(`./data/${doc.name}.json`, `./data/backup/${doc.name}.json`)
            await fs.writeFile(`./data/${doc.name}.json`, JSON.stringify(doc))
        }
    }
