@@ -1,4 +1,5 @@
 const fs = require("fs/promises")
+const path = require("path")
 class Document {
    #cols
    #values
@@ -78,11 +79,11 @@ module.exports.Database = class Database {
        this.#docs = []
        for (let docFile of require("fs").readdirSync("./data").filter(a=>a.endsWith(".json"))) {
            try {
-           let doc = require(`./data/${docFile}`)
+           let doc = require(path.join(__dirname, "./data", docFile))
            this.#docs.push(new Document(doc.name, doc.cols, doc.values, async () => { await this.save() }))
            } catch {
            fs.copyFile(`./data/backup/${docFile}`, `./data/${docFile}`).then(() => {
-           let doc = require(`./data/${docFile}`)
+           let doc = require(path.join(__dirname, "./data", docFile))
            this.#docs.push(new Document(doc.name, doc.cols, doc.values, async () => { await this.save() }))
            })
            }
